@@ -17,6 +17,20 @@ class MainActivity : AppCompatActivity() {
 
         // Example of a call to a native method
         binding.sampleText.text = stringFromJNI()
+
+        binding.buttonBeep.setOnClickListener {
+            beep()
+        }
+    }
+
+    override fun onResume() {
+        startAudioEngine()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        stopAudioEngine()
+        super.onPause()
     }
 
     /**
@@ -24,6 +38,12 @@ class MainActivity : AppCompatActivity() {
      * which is packaged with this application.
      */
     external fun stringFromJNI(): String
+
+    external fun startAudioEngine()
+
+    external fun stopAudioEngine()
+
+    external fun beep()
 
     companion object {
         // Used to load the 'toy3oh3' library on application startup.
