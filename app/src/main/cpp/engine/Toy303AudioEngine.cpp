@@ -39,7 +39,6 @@ private:
 };
 
 Toy303Callback *toy303Callback = new Toy303Callback();
-std::shared_ptr<oboe::AudioStream> mStream;
 
 Toy303AudioEngine::Toy303AudioEngine() {
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Created audio engine");
