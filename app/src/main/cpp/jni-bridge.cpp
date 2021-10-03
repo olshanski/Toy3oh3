@@ -1,9 +1,9 @@
 #include <jni.h>
 #include <string>
 
-#include "engine/AudioEngine.h"
+#include "engine/Toy303AudioEngine.h"
 
-static AudioEngine *audioEngine = new AudioEngine();
+static Toy303AudioEngine *audioEngine = new Toy303AudioEngine();
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_olshanski_toy3oh3_MainActivity_stringFromJNI(
@@ -25,6 +25,6 @@ Java_com_olshanski_toy3oh3_MainActivity_stopAudioEngine(JNIEnv *env, jobject thi
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_olshanski_toy3oh3_MainActivity_beep(JNIEnv *env, jobject thiz) {
-    audioEngine->beep();
+Java_com_olshanski_toy3oh3_MainActivity_beep(JNIEnv *env, jobject thiz, jboolean isKeyDown) {
+    audioEngine->beep(isKeyDown);
 }
