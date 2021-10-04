@@ -15,16 +15,18 @@ public:
     oboe::DataCallbackResult onAudioReady(oboe::AudioStream *audioStream, void *audioData, int32_t numFrames);
 
 private:
-    static const constexpr double kPi = M_PI;
-    static const constexpr double kTwoPi = kPi * 2;
+    static  constexpr double kPi = M_PI;
+    static constexpr double kTwoPi = kPi * 2;
 
     // C3
-    static const constexpr double kNoteA4Hz = 261.6256;
+    static constexpr double kNoteC3Hz = 261.6256;
+
+    static constexpr int kDefaultSampleRate = 44100;
 
     float mPhase = 0.0;
 
     std::atomic<float> mAmplitude{0.2};
-    std::atomic<double> mPhaseIncrement{(kTwoPi * kNoteA4Hz) / static_cast<double>(44100)};
+    std::atomic<double> mPhaseIncrement{(kTwoPi * kNoteC3Hz) / static_cast<double>(kDefaultSampleRate)};
 
 };
 
