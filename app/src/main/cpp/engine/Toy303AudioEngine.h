@@ -6,13 +6,14 @@
 #define TOY3OH3_TOY303AUDIOENGINE_H
 
 #include <oboe/Oboe.h>
-
+#include "Toy303Callback.h"
 
 class Toy303AudioEngine {
 public:
     Toy303AudioEngine();
 
     oboe::Result startEngine();
+
     oboe::Result stopEngine();
 
     void beep(bool isBeepOn);
@@ -23,11 +24,8 @@ private:
 
     std::shared_ptr<oboe::AudioStream> mStream;
 
-    int32_t        mDeviceId = oboe::Unspecified;
-    int32_t        mChannelCount = oboe::Unspecified;
-    oboe::AudioApi mAudioApi = oboe::AudioApi::Unspecified;
-    std::mutex     mLock;
-};
+    Toy303Callback *toy303Callback;
 
+};
 
 #endif //TOY3OH3_TOY303AUDIOENGINE_H
