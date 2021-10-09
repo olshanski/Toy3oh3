@@ -28,3 +28,8 @@ JNIEXPORT void JNICALL
 Java_com_olshanski_toy3oh3_MainActivity_beep(JNIEnv *env, jobject thiz, jboolean isKeyDown) {
     audioEngine->beep(isKeyDown);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setTone(JNIEnv *env, jobject thiz, jint note, jint octave) {
+    audioEngine->setNote(note, octave);
+}

@@ -18,6 +18,8 @@ public:
 
     void beep(bool isBeepOn);
 
+    void setNote(int note, int octave);
+
 private:
 
     oboe::Result openPlaybackStream();
