@@ -60,3 +60,7 @@ oboe::Result Toy303AudioEngine::openPlaybackStream() {
 
     return result;
 }
+
+void Toy303AudioEngine::setNote(int note, int octave) {
+    toy303Callback->onNoteSelected(note, octave);
+}

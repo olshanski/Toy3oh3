@@ -11,6 +11,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private var doBeep = false
+
     // TODO: Handle accessibility
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,25 +21,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI()
-
-        binding.buttonBeep.setOnTouchListener { _, motionEvent ->
-            return@setOnTouchListener when (motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    beep(true)
-                    true
-                }
-
-                MotionEvent.ACTION_UP -> {
-                    beep(false)
-                    true
-                }
-
-                else -> false
-            }
-
-        }
+        setupUi()
     }
 
     override fun onResume() {
@@ -60,7 +44,33 @@ class MainActivity : AppCompatActivity() {
 
     external fun stopAudioEngine()
 
+    external fun setTone(note: Int, octave: Int)
+
     external fun beep(isKeyDown: Boolean)
+
+    private fun setupUi() {
+        with(binding) {
+
+            // Example of a call to a native method
+            sampleText.text = stringFromJNI()
+
+            buttonBeep.setOnClickListener {
+                doBeep = !doBeep
+
+                beep(doBeep)
+            }
+
+            buttonTone1.text = getString(R.string.home_label_tone_template, "C3")
+            buttonTone2.text = getString(R.string.home_label_tone_template, "A4")
+
+            buttonTone1.setOnClickListener {
+                setTone(4, 3)
+            }
+            buttonTone2.setOnClickListener {
+                setTone(1, 4)
+            }
+        }
+    }
 
     companion object {
         // Used to load the 'toy3oh3' library on application startup.

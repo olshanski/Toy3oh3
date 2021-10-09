@@ -2,4 +2,5 @@
     <string name="app_name">Toy3oh3</string>
 
     <string name="home_label_button_beep">Make beep!</string>
+    <string name="home_label_tone_template">Note: %s</string>
 </resources>
