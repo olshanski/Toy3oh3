@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="64dp"
+    android:layout_height="64dp"
+    android:orientation="vertical"
+    android:layout_margin="4dp"
+    android:background="?attr/selectableItemBackground"
+    >
+    <TextView
+        android:id="@+id/text_note_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textAppearance="?attr/textAppearanceHeadline4"
+        android:background="#aaaaaa"
+        tools:text="A"
+        />
+</LinearLayout>

@@ -3,8 +3,8 @@ package com.olshanski.toy3oh3
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
-import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import com.olshanski.toy3oh3.adapter.PadAdapter
 import com.olshanski.toy3oh3.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -60,22 +60,39 @@ class MainActivity : AppCompatActivity() {
                 beep(doBeep)
             }
 
-            buttonTone1.text = getString(R.string.home_label_tone_template, "C3")
-            buttonTone2.text = getString(R.string.home_label_tone_template, "A4")
+            val lM = GridLayoutManager(this@MainActivity, 6, GridLayoutManager.VERTICAL, false)
+            val adapter = PadAdapter(listener = object : PadAdapter.PadClickListener {
+                override fun onPadClicked(note: Int, octave: Int) {
+                    setTone(note, octave)
+                }
+            })
 
-            buttonTone1.setOnClickListener {
-                setTone(4, 3)
-            }
-            buttonTone2.setOnClickListener {
-                setTone(1, 4)
-            }
+            pads.layoutManager = lM
+            pads.adapter = adapter
+
+            adapter.items = NOTES
         }
     }
 
-    companion object {
+    private companion object {
         // Used to load the 'toy3oh3' library on application startup.
         init {
             System.loadLibrary("toy3oh3")
         }
+
+        private val NOTES = listOf(
+            Pad(4, 3, "C"),
+            Pad(5, 3, "C#"),
+            Pad(6, 3, "D"),
+            Pad(7, 3, "D#"),
+            Pad(8, 3, "E"),
+            Pad(9, 3, "F"),
+            Pad(10, 3, "F#"),
+            Pad(11, 3, "G"),
+            Pad(12, 3, "G#"),
+            Pad(1, 4, "A"),
+            Pad(2, 4, "A#"),
+            Pad(3, 4, "B"),
+        )
     }
 }
