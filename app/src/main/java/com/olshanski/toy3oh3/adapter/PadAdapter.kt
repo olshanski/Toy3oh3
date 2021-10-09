@@ -55,7 +55,7 @@ class PadAdapter(private val listener: KeyListener) :
                         true
                     }
 
-                    MotionEvent.ACTION_UP -> {
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         listener.onKeyReleased(pad.note, pad.octave)
                         true
                     }

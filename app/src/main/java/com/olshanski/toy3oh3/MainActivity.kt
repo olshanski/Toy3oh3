@@ -61,17 +61,15 @@ class MainActivity : AppCompatActivity() {
                 private var currentPad: Pair<Int, Int>? = null
 
                 override fun onKeyPressed(note: Int, octave: Int) {
+                    currentPad = note to octave
                     playNote(note, octave)
 
-                    if (currentPad == null) {
-                        currentPad = note to octave
-                        playNote(note, octave)
-                    }
                 }
 
                 override fun onKeyReleased(note: Int, octave: Int) {
-                    currentPad = null
-                    releaseNote()
+                    if (note == currentPad?.first && octave == currentPad?.second) {
+                        releaseNote()
+                    }
                 }
             })
 
