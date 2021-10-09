@@ -25,11 +25,16 @@ Java_com_olshanski_toy3oh3_MainActivity_stopAudioEngine(JNIEnv *env, jobject thi
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_olshanski_toy3oh3_MainActivity_beep(JNIEnv *env, jobject thiz, jboolean isKeyDown) {
-    audioEngine->beep(isKeyDown);
+Java_com_olshanski_toy3oh3_MainActivity_playNote(JNIEnv *env, jobject thiz, jint note,jint octave) {
+    audioEngine->playNote(note, octave);
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_olshanski_toy3oh3_MainActivity_setTone(JNIEnv *env, jobject thiz, jint note, jint octave) {
-    audioEngine->setNote(note, octave);
+Java_com_olshanski_toy3oh3_MainActivity_releaseNote(JNIEnv *env, jobject thiz) {
+    audioEngine->releaseNote();
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setVolume(JNIEnv *env, jobject thiz, jdouble volume) {
+    audioEngine->setVolume(volume);
 }

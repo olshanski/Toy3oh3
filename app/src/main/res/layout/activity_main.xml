@@ -15,14 +15,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_beep"
-        android:layout_width="wrap_content"
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/seekbar_volume"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sample_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/home_label_button_beep"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sample_text"
+        android:min="0"
+        android:max="100"
         />
 
     <androidx.recyclerview.widget.RecyclerView

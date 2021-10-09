@@ -27,12 +27,14 @@ oboe::Result Toy303AudioEngine::startEngine() {
         __android_log_print(ANDROID_LOG_DEBUG, TAG, "AudioStream format is %s", oboe::convertToText(format));
     }
 
+    mStream->requestStart();
+
     return result;
 }
 
 oboe::Result Toy303AudioEngine::stopEngine() {
-    oboe::Result result = oboe::Result::OK;
-    mStream->close();
+    mStream->requestStop();
+    oboe::Result result = mStream->close();
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Stopping audio engine");
     return result;
 }
@@ -61,6 +63,18 @@ oboe::Result Toy303AudioEngine::openPlaybackStream() {
     return result;
 }
 
-void Toy303AudioEngine::setNote(int note, int octave) {
+void Toy303AudioEngine::releaseNote() {
+    toy303Callback->onNoteReleased();
+}
+
+void Toy303AudioEngine::playNote(int note, int octave) {
     toy303Callback->onNoteSelected(note, octave);
+}
+
+void Toy303AudioEngine::setVolume(double volume) {
+    if (volume > 1.0 || volume < 0.0) {
+        return;
+    }
+
+    toy303Callback->changeVolume(volume);
 }

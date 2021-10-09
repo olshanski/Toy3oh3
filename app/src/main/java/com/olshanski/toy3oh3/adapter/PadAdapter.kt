@@ -1,12 +1,15 @@
 package com.olshanski.toy3oh3.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.olshanski.toy3oh3.Pad
 import com.olshanski.toy3oh3.databinding.ItemPadBinding
 
-class PadAdapter(private val listener: PadClickListener) : RecyclerView.Adapter<PadAdapter.PadViewHolder>() {
+class PadAdapter(private val listener: KeyListener) :
+    RecyclerView.Adapter<PadAdapter.PadViewHolder>() {
 
     var items: List<Pad> = emptyList()
         set(value) {
@@ -15,7 +18,13 @@ class PadAdapter(private val listener: PadClickListener) : RecyclerView.Adapter<
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PadViewHolder {
-        return PadViewHolder(ItemPadBinding.inflate(LayoutInflater.from(parent.context), null, false))
+        return PadViewHolder(
+            ItemPadBinding.inflate(
+                LayoutInflater.from(parent.context),
+                null,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: PadViewHolder, position: Int) {
@@ -26,16 +35,33 @@ class PadAdapter(private val listener: PadClickListener) : RecyclerView.Adapter<
         return items.size
     }
 
-    interface PadClickListener {
-        fun onPadClicked(note: Int, octave: Int): Unit
+    interface KeyListener {
+
+        fun onKeyPressed(note: Int, octave: Int)
+
+        fun onKeyReleased(note: Int, octave: Int)
     }
 
-    class PadViewHolder(private val binding: ItemPadBinding) : RecyclerView.ViewHolder(binding.root) {
+    class PadViewHolder(private val binding: ItemPadBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(pad: Pad, listener: PadClickListener) {
+        @SuppressLint("ClickableViewAccessibility")
+        fun bind(pad: Pad, listener: KeyListener) {
             binding.textNoteName.text = pad.name
-            binding.root.setOnClickListener {
-                listener.onPadClicked(pad.note, pad.octave)
+            binding.root.setOnTouchListener { view, motionEvent ->
+                return@setOnTouchListener when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        listener.onKeyPressed(pad.note, pad.octave)
+                        true
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        listener.onKeyReleased(pad.note, pad.octave)
+                        true
+                    }
+
+                    else -> false
+                }
             }
         }
     }
