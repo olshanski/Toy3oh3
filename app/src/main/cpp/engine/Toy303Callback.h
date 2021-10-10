@@ -16,6 +16,10 @@ public:
 
     void onNoteSelected(int note, int octave);
 
+    void onNoteReleased();
+
+    void changeVolume(double volume);
+
 private:
     static  constexpr double kPi = M_PI;
     static constexpr double kTwoPi = kPi * 2;
@@ -32,6 +36,7 @@ private:
 
     std::atomic<float> mAmplitude{0.2};
     std::atomic<double> mPhaseIncrement{(kTwoPi * kNoteA4FreqHz) / static_cast<double>(kDefaultSampleRate)};
+    std::atomic<bool> isWaveOn_{false};
 
     /**
      *

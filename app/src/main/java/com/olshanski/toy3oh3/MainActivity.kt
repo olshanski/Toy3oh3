@@ -3,6 +3,7 @@ package com.olshanski.toy3oh3
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.SeekBar
 import androidx.recyclerview.widget.GridLayoutManager
 import com.olshanski.toy3oh3.adapter.PadAdapter
 import com.olshanski.toy3oh3.databinding.ActivityMainBinding
@@ -10,8 +11,6 @@ import com.olshanski.toy3oh3.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private var doBeep = false
 
     // TODO: Handle accessibility
     @SuppressLint("ClickableViewAccessibility")
@@ -44,9 +43,11 @@ class MainActivity : AppCompatActivity() {
 
     external fun stopAudioEngine()
 
-    external fun setTone(note: Int, octave: Int)
+    external fun playNote(note: Int, octave: Int)
 
-    external fun beep(isKeyDown: Boolean)
+    external fun releaseNote()
+
+    external fun setVolume(volume: Double)
 
     private fun setupUi() {
         with(binding) {
@@ -54,16 +55,21 @@ class MainActivity : AppCompatActivity() {
             // Example of a call to a native method
             sampleText.text = stringFromJNI()
 
-            buttonBeep.setOnClickListener {
-                doBeep = !doBeep
-
-                beep(doBeep)
-            }
-
             val lM = GridLayoutManager(this@MainActivity, 6, GridLayoutManager.VERTICAL, false)
-            val adapter = PadAdapter(listener = object : PadAdapter.PadClickListener {
-                override fun onPadClicked(note: Int, octave: Int) {
-                    setTone(note, octave)
+            val adapter = PadAdapter(listener = object : PadAdapter.KeyListener {
+
+                private var currentPad: Pair<Int, Int>? = null
+
+                override fun onKeyPressed(note: Int, octave: Int) {
+                    currentPad = note to octave
+                    playNote(note, octave)
+
+                }
+
+                override fun onKeyReleased(note: Int, octave: Int) {
+                    if (note == currentPad?.first && octave == currentPad?.second) {
+                        releaseNote()
+                    }
                 }
             })
 
@@ -71,6 +77,21 @@ class MainActivity : AppCompatActivity() {
             pads.adapter = adapter
 
             adapter.items = NOTES
+
+            seekbarVolume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    setVolume(progress / 100.0)
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                    // NO-OP
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                    // NO-OP
+                }
+
+            })
         }
     }
 
