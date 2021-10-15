@@ -6,7 +6,7 @@
 #define TOY3OH3_TOY303AUDIOENGINE_H
 
 #include <oboe/Oboe.h>
-#include "Toy303Callback.h"
+#include "Voice.h"
 
 class Toy303AudioEngine {
 public:
@@ -30,7 +30,7 @@ private:
 
     std::shared_ptr<oboe::AudioStream> mStream;
 
-    Toy303Callback *toy303Callback;
+    std::unique_ptr<Voice> toy303Callback;
 
 };
 

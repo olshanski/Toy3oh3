@@ -24,7 +24,8 @@ add_library( # Sets the name of the library.
         jni-bridge.cpp
 
         engine/Toy303AudioEngine.cpp
-        engine/Toy303Callback.cpp
+        engine/Voice.cpp
+        engine/Oscillator.cpp
         )
 
 # Searches for a specified prebuilt library and stores the path as a

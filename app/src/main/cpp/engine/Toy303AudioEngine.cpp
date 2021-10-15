@@ -9,7 +9,7 @@
 const char *TAG = "Toy303AudioEngine";
 
 Toy303AudioEngine::Toy303AudioEngine() {
-    toy303Callback = new Toy303Callback();
+    toy303Callback = std::make_unique<Voice>();
 
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Created audio engine");
 }
@@ -24,7 +24,8 @@ oboe::Result Toy303AudioEngine::startEngine() {
     if (result != oboe::Result::OK) {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "Error %s", oboe::convertToText(result));
     } else {
-        __android_log_print(ANDROID_LOG_DEBUG, TAG, "AudioStream format is %s", oboe::convertToText(format));
+        __android_log_print(ANDROID_LOG_DEBUG, TAG, "AudioStream format is %s",
+                            oboe::convertToText(format));
     }
 
     mStream->requestStart();
@@ -56,7 +57,7 @@ oboe::Result Toy303AudioEngine::openPlaybackStream() {
             ->setSharingMode(oboe::SharingMode::Exclusive)
             ->setFormat(oboe::AudioFormat::Float)
             ->setChannelCount(oboe::ChannelCount::Mono)
-            ->setDataCallback(toy303Callback);
+            ->setDataCallback(toy303Callback.get());
 
     oboe::Result result = builder.openStream(mStream);
 
