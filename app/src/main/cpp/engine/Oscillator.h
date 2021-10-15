@@ -8,23 +8,30 @@
 #include <oboe/Oboe.h>
 #include <atomic>
 #include "android/log.h"
+#include "Envelope.h"
 
 constexpr double kDefaultFrequency = 440.0;
-constexpr double kDefaultSampleRate = 48000;
 
 static constexpr double kPi = M_PI;
 static constexpr double kTwoPi = kPi * 2;
 
 class Oscillator {
-
     //~Oscillator() = default;
 
 public:
 
+    Oscillator();
+
     void render(float *audioData, int32_t numFrames);
 
     void setWaveOn(bool isWaveOn) {
-        isWaveOn_.store(isWaveOn);
+        if (isWaveOn) {
+            envelope->keyPressed();
+        } else {
+            envelope->keyReleased();
+        }
+
+        isWaveOn_.store(true);
     }
 
     void setFrequency(double freq) {
@@ -38,6 +45,8 @@ private:
     std::atomic<double> mPhaseIncrement{
             (kTwoPi * kDefaultFrequency) / static_cast<double>(kDefaultSampleRate)};
     std::atomic<bool> isWaveOn_{false};
+
+    std::unique_ptr<Envelope> envelope;
 };
 
 
