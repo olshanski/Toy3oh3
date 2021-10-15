@@ -52,10 +52,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupUi() {
         with(binding) {
 
-            // Example of a call to a native method
-            sampleText.text = stringFromJNI()
 
-            val lM = GridLayoutManager(this@MainActivity, 6, GridLayoutManager.VERTICAL, false)
+            val lM = GridLayoutManager(this@MainActivity, 2, GridLayoutManager.VERTICAL, false)
             val adapter = PadAdapter(listener = object : PadAdapter.KeyListener {
 
                 private var currentPad: Pair<Int, Int>? = null
@@ -77,21 +75,6 @@ class MainActivity : AppCompatActivity() {
             pads.adapter = adapter
 
             adapter.items = NOTES
-
-            seekbarVolume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    setVolume(progress / 100.0)
-                }
-
-                override fun onStartTrackingTouch(p0: SeekBar?) {
-                    // NO-OP
-                }
-
-                override fun onStopTrackingTouch(p0: SeekBar?) {
-                    // NO-OP
-                }
-
-            })
         }
     }
 
