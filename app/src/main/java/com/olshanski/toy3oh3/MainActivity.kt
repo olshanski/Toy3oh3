@@ -85,18 +85,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         private val NOTES = listOf(
-            Pad(4, 3, "C"),
-            Pad(5, 3, "C#"),
-            Pad(6, 3, "D"),
-            Pad(7, 3, "D#"),
-            Pad(8, 3, "E"),
-            Pad(9, 3, "F"),
-            Pad(10, 3, "F#"),
-            Pad(11, 3, "G"),
-            Pad(12, 3, "G#"),
-            Pad(1, 4, "A"),
-            Pad(2, 4, "A#"),
-            Pad(3, 4, "B"),
+            Pad(4, 1, "C"),
+            Pad(5, 1, "C#"),
+            Pad(6, 1, "D"),
+            Pad(7, 1, "D#"),
+            Pad(8, 1, "E"),
+            Pad(9, 1, "F"),
+            Pad(10, 1, "F#"),
+            Pad(11, 1, "G"),
+            Pad(12, 1, "G#"),
+            Pad(1, 2, "A"),
+            Pad(2, 2, "B#"),
+            Pad(3, 2, "B"),
         )
     }
 }

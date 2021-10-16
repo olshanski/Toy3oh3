@@ -5,17 +5,29 @@
 #include "Oscillator.h"
 #include "android/log.h"
 
+Oscillator::Oscillator() {
+    envelope = std::make_unique<Envelope>();
+
+    __android_log_print(ANDROID_LOG_DEBUG, "Oscillator", "Initialized oscillator");
+}
+
 void Oscillator::render(float *audioData, int32_t numFrames) {
 
-    if (!isWaveOn_.load()) mPhase = 0.0;
+    if (!envelope->isWaveOn()) {
+        mPhase = 0.0;
+        return;
+    }
 
     for (int i = 0; i < numFrames; ++i) {
-        if (isWaveOn_.load()) {
-            audioData[i] = sinf(mPhase) * mAmplitude;
+        if (!envelope->isWaveOn()) {
+            audioData[i] = 0.0;
+        } else {
+            //audioData[i] = sinf(mPhase) * mAmplitude;
+            audioData[i] = (float) ((mPhase - kPi) / kPi) * mAmplitude;
             mPhase += mPhaseIncrement;
             if (mPhase > kTwoPi) mPhase -= kTwoPi;
-        } else {
-            audioData[i] = 0.0;
         }
+
+        audioData[i] *= envelope->renderFrame();
     }
 }
