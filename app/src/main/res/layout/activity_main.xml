@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_pad"
         tools:itemCount="12"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:spanCount="6"
         />
 

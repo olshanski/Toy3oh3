@@ -13,17 +13,21 @@ Oscillator::Oscillator() {
 
 void Oscillator::render(float *audioData, int32_t numFrames) {
 
-    if (!isWaveOn_.load()) {
-        return;
+    if (!envelope->isWaveOn()) {
         mPhase = 0.0;
+        return;
     }
 
     for (int i = 0; i < numFrames; ++i) {
-        //audioData[i] = sinf(mPhase) * mAmplitude;
-        audioData[i] = (float) ((mPhase - kPi) / kPi) * mAmplitude;
-        mPhase += mPhaseIncrement;
-        if (mPhase > kTwoPi) mPhase -= kTwoPi;
-    }
+        if (!envelope->isWaveOn()) {
+            audioData[i] = 0.0;
+        } else {
+            //audioData[i] = sinf(mPhase) * mAmplitude;
+            audioData[i] = (float) ((mPhase - kPi) / kPi) * mAmplitude;
+            mPhase += mPhaseIncrement;
+            if (mPhase > kTwoPi) mPhase -= kTwoPi;
+        }
 
-    envelope->render(audioData, numFrames);
+        audioData[i] *= envelope->renderFrame();
+    }
 }

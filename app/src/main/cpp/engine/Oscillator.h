@@ -30,8 +30,6 @@ public:
         } else {
             envelope->keyReleased();
         }
-
-        isWaveOn_.store(true);
     }
 
     void setFrequency(double freq) {
@@ -44,7 +42,6 @@ private:
     std::atomic<float> mAmplitude{0.2};
     std::atomic<double> mPhaseIncrement{
             (kTwoPi * kDefaultFrequency) / static_cast<double>(kDefaultSampleRate)};
-    std::atomic<bool> isWaveOn_{false};
 
     std::unique_ptr<Envelope> envelope;
 };
