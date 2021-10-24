@@ -27,6 +27,7 @@ add_library( # Sets the name of the library.
         engine/Voice.cpp
         engine/Oscillator.cpp
         engine/Envelope.cpp
+        engine/CircularBuffer.cpp
         )
 
 # Searches for a specified prebuilt library and stores the path as a
