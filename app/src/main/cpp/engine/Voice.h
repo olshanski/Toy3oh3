@@ -7,8 +7,9 @@
 
 #include <oboe/Oboe.h>
 #include "Oscillator.h"
+#include "EnvelopeListener.h"
 
-class Voice : public oboe::AudioStreamDataCallback {
+class Voice : public oboe::AudioStreamDataCallback, EnvelopeListener {
 public:
 
     Voice();
@@ -28,6 +29,10 @@ public:
 
     void setWaveform(WaveForm waveForm);
 
+    void onEnvelopeStarted();
+
+    void onEnvelopeStopped();
+
 private:
     static constexpr int kNoteA4Index = 49;
     static constexpr int kSemitonesPerOctave = 12;
@@ -35,7 +40,6 @@ private:
     static constexpr double kNoteA4FreqHz = 440.00;
 
     std::atomic<float> mAmplitude{0.2};
-    std::atomic<bool> isWaveOn_{false};
 
     std::unique_ptr<Oscillator> mOscillator;
 

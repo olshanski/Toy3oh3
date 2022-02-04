@@ -11,6 +11,7 @@
 #include "android/log.h"
 #include <string>
 #include <string_view>
+#include "EnvelopeListener.h"
 
 //TODO: Cleanup
 
@@ -43,6 +44,8 @@ public:
     void setPhaseLength(int millis, Phase phase);
     inline Phase getPhase() const { return mPhase; };
 
+    void setListener(EnvelopeListener* listener);
+
     Envelope();
 private:
     Phase mPhase = IDLE;
@@ -61,6 +64,8 @@ private:
     void calculateMultiplier(double startLevel, double endLevel, unsigned long long lengthInSamples);
 
     int millisToSamples(int millis) const;
+
+    EnvelopeListener* mListener;
 };
 
 #endif //TOY3OH3_ENVELOPE_H

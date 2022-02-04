@@ -20,10 +20,12 @@ void Envelope::enterPhase(Phase phase) {
 
     switch (phase) {
         case IDLE:
+            mListener->onEnvelopeStopped();
             mLevel = 0.0;
             multiplier = 1.0;
             break;
         case ATTACK:
+            mListener->onEnvelopeStarted();
             mLevel = kMinimumLevel;
             calculateMultiplier(mLevel, 1.0, mNextPhaseSample);
             break;
@@ -104,6 +106,10 @@ void Envelope::setSustainLevel(double sustain) {
     } else if (mPhase == SUSTAIN) {
         mLevel = sustain;
     }
+}
+
+void Envelope::setListener(EnvelopeListener *listener) {
+    mListener = listener;
 }
 
 void Envelope::calculateMultiplier(double startLevel, double endLevel,

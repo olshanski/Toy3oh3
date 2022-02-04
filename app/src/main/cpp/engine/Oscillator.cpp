@@ -10,6 +10,10 @@ Oscillator::Oscillator() {
 }
 
 float Oscillator::nexSample() {
+    if (!isWaveOn) {
+        return false;
+    }
+
     float value = 0.0;
 
     value = nextSample(mWaveForm);

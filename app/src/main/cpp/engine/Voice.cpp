@@ -8,6 +8,7 @@
 Voice::Voice() {
     mOscillator = std::make_unique<Oscillator>();
     mEnvelope = std::make_unique<Envelope>();
+    mEnvelope->setListener(this);
     __android_log_print(ANDROID_LOG_DEBUG, "Callback", "Initialized callback");
 }
 
@@ -30,16 +31,12 @@ oboe::DataCallbackResult Voice::onAudioReady(oboe::AudioStream *audioStream, voi
 }
 
 void Voice::onNoteSelected(int note, int octave) {
-    isWaveOn_.store(true);
-    mOscillator->setWaveOn(true);
     mEnvelope->enterPhase(ATTACK);
     updateNote(note, octave);
 }
 
 void Voice::onNoteReleased() {
-    isWaveOn_.store(false);
     mEnvelope->enterPhase(RELEASE);
-    mOscillator->setWaveOn(false);
 }
 
 void Voice::updateNote(int note, int octave) {
@@ -77,4 +74,11 @@ void Voice::setWaveform(WaveForm waveForm) {
     mOscillator->setWaveForm(waveForm);
 }
 
+void Voice::onEnvelopeStarted() {
+    mOscillator->setWaveOn(true);
+}
+
+void Voice::onEnvelopeStopped() {
+    mOscillator->setWaveOn(false);
+}
 
