@@ -8,6 +8,154 @@
     android:paddingHorizontal="12dp"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/waveform_selector"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_waveshapes"
+        android:background="?attr/selectableItemBackground"
+        />
+
+    <TextView
+        android:id="@+id/attack_label"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/waveform_selector"
+        android:layout_marginTop="32dp"
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        android:text="Attack"
+        />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/attack_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/attack_label"
+        app:layout_constraintTop_toTopOf="@id/attack_label"
+        app:layout_constraintEnd_toStartOf="@id/attack_value"
+        app:layout_constraintBottom_toBottomOf="@id/attack_label"
+        android:min="1"
+        android:max="2500"
+        android:tooltipText="Attack"
+        />
+
+    <TextView
+        android:id="@+id/attack_value"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/attack_seekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        tools:text="500 ms"
+        />
+
+    <TextView
+        android:id="@+id/decay_label"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/attack_value"
+        android:layout_marginTop="8dp"
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        android:text="Decay"
+        />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/decay_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/decay_label"
+        app:layout_constraintTop_toTopOf="@id/decay_label"
+        app:layout_constraintEnd_toStartOf="@id/decay_value"
+        android:min="1"
+        android:max="2500"
+        android:tooltipText="Attack"
+        />
+
+    <TextView
+        android:id="@+id/decay_value"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/decay_seekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        tools:text="500 ms"
+        />
+
+    <TextView
+        android:id="@+id/release_label"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/decay_value"
+        android:layout_marginTop="8dp"
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        android:text="Release"
+        />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/release_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/release_label"
+        app:layout_constraintTop_toTopOf="@id/release_label"
+        app:layout_constraintEnd_toStartOf="@id/release_value"
+        android:min="1"
+        android:max="2500"
+        android:tooltipText="Attack"
+        />
+
+    <TextView
+        android:id="@+id/release_value"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/release_seekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        tools:text="500 ms"
+        />
+
+    <TextView
+        android:id="@+id/sustain_label"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/release_value"
+        android:layout_marginTop="8dp"
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        android:text="Sustain"
+        />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sustain_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/sustain_label"
+        app:layout_constraintTop_toTopOf="@id/sustain_label"
+        app:layout_constraintEnd_toStartOf="@id/sustain_value"
+        android:min="1"
+        android:max="100"
+        android:tooltipText="Attack"
+        />
+
+    <TextView
+        android:id="@+id/sustain_value"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/sustain_seekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        tools:text="0.3"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pads"
         android:layout_width="0dp"

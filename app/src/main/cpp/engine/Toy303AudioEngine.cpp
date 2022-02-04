@@ -70,3 +70,15 @@ void Toy303AudioEngine::setVolume(double volume) {
 
     toy303Callback->changeVolume(volume);
 }
+
+void Toy303AudioEngine::setPhaseLength(int lengthMillis, Phase phase) {
+    toy303Callback->setPhaseLength(lengthMillis, phase);
+}
+
+void Toy303AudioEngine::setSustainLevel(double sustain) {
+    toy303Callback->setSustainLevel(sustain);
+}
+
+void Toy303AudioEngine::setWaveform(WaveForm waveForm) {
+    toy303Callback->setWaveform(waveForm);
+}

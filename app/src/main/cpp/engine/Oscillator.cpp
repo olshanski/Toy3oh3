@@ -6,42 +6,18 @@
 #include "android/log.h"
 
 Oscillator::Oscillator() {
-    envelope = std::make_unique<Envelope>();
-
     __android_log_print(ANDROID_LOG_DEBUG, "Oscillator", "Initialized oscillator");
 }
 
-void Oscillator::render(float *audioData, int32_t numFrames) {
+float Oscillator::nexSample() {
+    float value = 0.0;
 
-    if (envelope->getPhase() == IDLE) {
-        mPhase = 0.0;
-        for (int i = 0; i < numFrames; i++) {
-            audioData[i] = 0.0;
-        }
-        return;
-    }
+    value = nextSample(mWaveForm);
 
-    for (int i = 0; i < numFrames; ++i) {
-        if (envelope->getPhase() == IDLE) {
-            envelope->renderFrame();
-            audioData[i] = 0.0;
-            return;
-        } else {
-            audioData[i] = nextSample(mWaveForm);
-            mPhase += mPhaseIncrement;
-            if (mPhase > kTwoPi) mPhase -= kTwoPi;
-        }
+    mPhase += mPhaseIncrement;
+    if (mPhase > kTwoPi) mPhase -= kTwoPi;
 
-        audioData[i] *= envelope->renderFrame();
-    }
-}
-
-void Oscillator::setWaveOn(bool isWaveOn) {
-    if (isWaveOn) {
-        envelope->enterPhase(ATTACK);
-    } else {
-        envelope->enterPhase(RELEASE);
-    }
+    return value;
 }
 
 void Oscillator::setFrequency(double freq) {
@@ -56,12 +32,12 @@ WaveForm Oscillator::getWaveForm() {
     return mWaveForm;
 }
 
-float Oscillator::nextSample(WaveForm waveForm) {
+float Oscillator::nextSample(WaveForm waveForm) const {
     switch (waveForm) {
         case SINE:
             return sinf(mPhase);
         case SAWTOOTH:
-            return (float) (1.0 - (2.0 * mPhase / (kPi * 2)));
+            return (float) (1.0 - (2.0 * mPhase / (kTwoPi)));
         case PULSE:
             if (mPhase < kPi) {
                 return 1.0;

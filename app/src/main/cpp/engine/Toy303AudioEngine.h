@@ -22,6 +22,12 @@ public:
 
     void setVolume(double volume);
 
+    void setPhaseLength(int lengthMillis, Phase phase);
+
+    void setSustainLevel(double  sustain);
+
+    void setWaveform(WaveForm waveForm);
+
 private:
 
     oboe::Result openPlaybackStream();

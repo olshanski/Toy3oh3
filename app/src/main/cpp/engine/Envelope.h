@@ -16,13 +16,12 @@
 
 static constexpr int kDefaultSampleRate = 48000;
 
-// 500ms
-static constexpr int kDefaultAttackInFrames = 24000;
-// 500ms
-static constexpr int kDefaultDecayInFrames = 24000;
+static constexpr int kDefaultAttackMillis = 500;
+static constexpr int kDefaultDecayMillis = 2500;
+static constexpr int kDefaultReleaseMillis = 500;
+
 static constexpr float kDefaultSustain = 0.2;
-// 500ms
-static constexpr int kDefaultReleaseInFrames = 48000;
+static constexpr float kMinimumLevel = 0.001;
 
 enum Phase {
     IDLE = 0,
@@ -30,28 +29,38 @@ enum Phase {
     DECAY,
     SUSTAIN,
     RELEASE,
-    kNumEnvelopePhases
+    kNumPhases
 };
 
 class Envelope {
 
 public:
 
-    float renderFrame();
+    float nextSample();
     void enterPhase(Phase phase);
-
+    void setSampleRate(int newSampleRate);
+    void setSustainLevel(double sustain);
+    void setPhaseLength(int millis, Phase phase);
     inline Phase getPhase() const { return mPhase; };
 
+    Envelope();
 private:
     Phase mPhase = IDLE;
+
     int mCurrentSample = 0;
-    int mNextPhaseSample = kDefaultAttackInFrames;
-    int mLastEventSample = 0;
-    int sampleRate = 480000;
+    int mNextPhaseSample = kDefaultAttackMillis;
+    int mSampleRate = kDefaultSampleRate;
+
     double mLevel = 0.0;
     double multiplier;
 
+    double mSustain = kDefaultSustain;
+
+    int mPhaseLengths[kNumPhases];
+
     void calculateMultiplier(double startLevel, double endLevel, unsigned long long lengthInSamples);
+
+    int millisToSamples(int millis) const;
 };
 
 #endif //TOY3OH3_ENVELOPE_H

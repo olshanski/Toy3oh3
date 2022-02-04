@@ -7,24 +7,38 @@
 
 Voice::Voice() {
     mOscillator = std::make_unique<Oscillator>();
+    mEnvelope = std::make_unique<Envelope>();
     __android_log_print(ANDROID_LOG_DEBUG, "Callback", "Initialized callback");
 }
 
-oboe::DataCallbackResult
-Voice::onAudioReady(oboe::AudioStream *audioStream, void *audioData, int32_t numFrames) {
+oboe::DataCallbackResult Voice::onAudioReady(oboe::AudioStream *audioStream, void *audioData, int32_t numFrames) {
     auto *output_data = static_cast<float *>(audioData);
-    mOscillator->render(output_data, numFrames);
+
+    if (mEnvelope->getPhase() == IDLE) {
+        for (int i = 0; i < numFrames; i++) {
+            output_data[i] = 0.0;
+        }
+
+        return oboe::DataCallbackResult::Continue;
+    }
+
+    for (int i = 0; i < numFrames; i++) {
+        output_data[i] = mOscillator->nexSample() * mEnvelope->nextSample();
+    }
+
     return oboe::DataCallbackResult::Continue;
 }
 
 void Voice::onNoteSelected(int note, int octave) {
     isWaveOn_.store(true);
     mOscillator->setWaveOn(true);
+    mEnvelope->enterPhase(ATTACK);
     updateNote(note, octave);
 }
 
 void Voice::onNoteReleased() {
     isWaveOn_.store(false);
+    mEnvelope->enterPhase(RELEASE);
     mOscillator->setWaveOn(false);
 }
 
@@ -49,6 +63,18 @@ double Voice::calculateNoteFrequency(int semitoneOffset) {
 
 void Voice::changeVolume(double volume) {
     mAmplitude.store(volume);
+}
+
+void Voice::setPhaseLength(int lengthMillis, Phase phase) {
+    mEnvelope->setPhaseLength(lengthMillis, phase);
+}
+
+void Voice::setSustainLevel(double sustain) {
+    mEnvelope->setSustainLevel(sustain);
+}
+
+void Voice::setWaveform(WaveForm waveForm) {
+    mOscillator->setWaveForm(waveForm);
 }
 
 

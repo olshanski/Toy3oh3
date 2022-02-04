@@ -25,9 +25,11 @@ public:
 
     Oscillator();
 
-    void render(float *audioData, int32_t numFrames);
+    float nexSample();
 
-    void setWaveOn(bool isWaveOn);
+    inline void setWaveOn(bool waveOn) {
+        isWaveOn = waveOn;
+    }
 
     void setFrequency(double freq);
 
@@ -39,12 +41,12 @@ private:
     float mPhase = 0.0;
     WaveForm mWaveForm = SAWTOOTH;
 
+    bool isWaveOn = true;
+
     std::atomic<double> mPhaseIncrement{
             (kTwoPi * kDefaultFrequency) / static_cast<double>(kDefaultSampleRate)};
 
-    std::unique_ptr<Envelope> envelope;
-
-    float nextSample(WaveForm waveForm);
+    float nextSample(WaveForm waveForm) const;
 };
 
 

@@ -8,7 +8,6 @@
 #include <oboe/Oboe.h>
 #include "Oscillator.h"
 
-//Basic data callback that generates a sine wave
 class Voice : public oboe::AudioStreamDataCallback {
 public:
 
@@ -23,6 +22,12 @@ public:
 
     void changeVolume(double volume);
 
+    void setPhaseLength(int lengthMillis, Phase phase);
+
+    void setSustainLevel(double sustain);
+
+    void setWaveform(WaveForm waveForm);
+
 private:
     static constexpr int kNoteA4Index = 49;
     static constexpr int kSemitonesPerOctave = 12;
@@ -33,6 +38,8 @@ private:
     std::atomic<bool> isWaveOn_{false};
 
     std::unique_ptr<Oscillator> mOscillator;
+
+    std::unique_ptr<Envelope> mEnvelope;
 
     /**
      *

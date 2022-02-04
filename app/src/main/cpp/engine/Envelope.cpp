@@ -4,27 +4,19 @@
 
 #include "Envelope.h"
 
+Envelope::Envelope() {
+    mPhaseLengths[IDLE] = 0;
+    mPhaseLengths[ATTACK] = kDefaultAttackMillis;
+    mPhaseLengths[DECAY] = kDefaultDecayMillis;
+    mPhaseLengths[SUSTAIN] = 0;
+    mPhaseLengths[RELEASE] = kDefaultReleaseMillis;
+}
+
 void Envelope::enterPhase(Phase phase) {
     mPhase = phase;
     mCurrentSample = 0;
 
-    if (mPhase == IDLE || mPhase == SUSTAIN) {
-        mNextPhaseSample = 0;
-    } else {
-        switch (mPhase) {
-            case ATTACK:
-                mNextPhaseSample = kDefaultAttackInFrames;
-                break;
-            case DECAY:
-                mNextPhaseSample = kDefaultDecayInFrames;
-                break;
-            case RELEASE:
-                mNextPhaseSample = kDefaultReleaseInFrames;
-                break;
-            default:
-                break;
-        }
-    }
+    mNextPhaseSample = millisToSamples(mPhaseLengths[phase]);
 
     switch (phase) {
         case IDLE:
@@ -32,49 +24,30 @@ void Envelope::enterPhase(Phase phase) {
             multiplier = 1.0;
             break;
         case ATTACK:
-            mLevel = 0.01;
+            mLevel = kMinimumLevel;
             calculateMultiplier(mLevel, 1.0, mNextPhaseSample);
             break;
         case DECAY:
             mLevel = 1.0;
-            calculateMultiplier(mLevel, fmax(0.5, 0.01), mNextPhaseSample);
+            calculateMultiplier(mLevel, fmax(mSustain, kMinimumLevel), mNextPhaseSample);
             break;
         case SUSTAIN:
-            mLevel = 0.5;
+            mLevel = mSustain;
             multiplier = 1.0;
             break;
         case RELEASE:
-            calculateMultiplier(mLevel, 0.01, mNextPhaseSample);
+            calculateMultiplier(mLevel, kMinimumLevel, mNextPhaseSample);
             break;
         default:
             break;
     }
 }
 
-float Envelope::renderFrame() {
+float Envelope::nextSample() {
     if (mPhase != IDLE && mPhase != SUSTAIN) {
         if (mCurrentSample == mNextPhaseSample) {
-            Phase newPhase;
-            switch (mPhase) {
-                case ATTACK:
-                    newPhase = DECAY;
-                    mNextPhaseSample = kDefaultDecayInFrames;
-
-                    enterPhase(newPhase);
-                    break;
-                case DECAY:
-                    newPhase = SUSTAIN;
-
-                    enterPhase(newPhase);
-                    break;
-                case RELEASE:
-                    newPhase = IDLE;
-                    mNextPhaseSample = kDefaultAttackInFrames;
-                    enterPhase(newPhase);
-                    mLevel = 0.01;
-                default:
-                    break;
-            }
+            auto newPhase = static_cast<Phase>((mPhase + 1) % kNumPhases);
+            enterPhase(newPhase);
         }
 
         mLevel *= multiplier;
@@ -84,7 +57,60 @@ float Envelope::renderFrame() {
     return mLevel;
 }
 
+void Envelope::setSampleRate(int newSampleRate) {
+    mSampleRate = newSampleRate;
+}
+
+void Envelope::setPhaseLength(int millis, Phase phase) {
+    mPhaseLengths[phase] = millis;
+
+    if (mPhase == phase) {
+        if (mPhase == SUSTAIN || mPhase == IDLE) {
+            return;
+        }
+
+        double targetLevel;
+
+        switch (mPhase) {
+            case ATTACK:
+                targetLevel = 1;
+                break;
+            case DECAY:
+                targetLevel = fmax(kMinimumLevel, mSustain);
+                break;
+            case RELEASE:
+                targetLevel = kMinimumLevel;
+                break;
+            default:
+                return;
+        }
+
+        double currentPhaseProgress = (mCurrentSample + 0.0) / mNextPhaseSample;
+        double remainingProgress = 1.0 - currentPhaseProgress;
+
+        int samplesToGo = millisToSamples(millis) * remainingProgress;
+        mNextPhaseSample = mCurrentSample + samplesToGo;
+        calculateMultiplier(mLevel, targetLevel, samplesToGo);
+    }
+}
+
+
+void Envelope::setSustainLevel(double sustain) {
+    mSustain = sustain;
+
+    if (mPhase == DECAY) {
+        int samplesToGo = mNextPhaseSample - mCurrentSample;
+        calculateMultiplier(mLevel, fmax(mSustain, kMinimumLevel), samplesToGo);
+    } else if (mPhase == SUSTAIN) {
+        mLevel = sustain;
+    }
+}
+
 void Envelope::calculateMultiplier(double startLevel, double endLevel,
                                    unsigned long long lengthInSamples) {
     multiplier = 1.0 + (log(endLevel) - log(startLevel)) / (lengthInSamples);
+}
+
+int Envelope::millisToSamples(int millis) const {
+    return (float) millis / 1000.0 * mSampleRate;
 }

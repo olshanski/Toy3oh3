@@ -38,3 +38,34 @@ JNIEXPORT void JNICALL
 Java_com_olshanski_toy3oh3_MainActivity_setVolume(JNIEnv *env, jobject thiz, jdouble volume) {
     audioEngine->setVolume(volume);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setAttack(JNIEnv *env, jobject thiz, jint attack_millis) {
+    audioEngine->setPhaseLength(attack_millis, ATTACK);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setDecay(JNIEnv *env, jobject thiz, jint decay_millis) {
+    audioEngine->setPhaseLength(decay_millis, DECAY);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setRelease(JNIEnv *env, jobject thiz, jint release_millis) {
+    audioEngine->setPhaseLength(release_millis, RELEASE);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setSustain(JNIEnv *env, jobject thiz, jdouble sustain) {
+    audioEngine->setSustainLevel(sustain);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setWaveform(JNIEnv *env, jobject thiz, jint waveform) {
+    if (waveform == 0) {
+        audioEngine->setWaveform(SAWTOOTH);
+    } else if (waveform == 1) {
+        audioEngine->setWaveform(PULSE);
+    } else {
+        audioEngine->setWaveform(SINE);
+    }
+}

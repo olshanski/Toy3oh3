@@ -49,11 +49,21 @@ class MainActivity : AppCompatActivity() {
 
     external fun setVolume(volume: Double)
 
+    external fun setAttack(attackMillis: Int)
+
+    external fun setDecay(decayMillis: Int)
+
+    external fun setRelease(releaseMillis: Int)
+
+    external fun setSustain(sustain: Double)
+
+    external fun setWaveform(waveform: Int)
+
     private fun setupUi() {
         with(binding) {
 
 
-            val lM = GridLayoutManager(this@MainActivity, 2, GridLayoutManager.VERTICAL, false)
+            val lM = GridLayoutManager(this@MainActivity, 4, GridLayoutManager.VERTICAL, false)
             val adapter = PadAdapter(listener = object : PadAdapter.KeyListener {
 
                 private var currentPad: Pair<Int, Int>? = null
@@ -75,7 +85,78 @@ class MainActivity : AppCompatActivity() {
             pads.adapter = adapter
 
             adapter.items = NOTES
+
+            val seekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    seekBar ?: return
+
+                    when (seekBar) {
+                        attackSeekbar -> {
+                            attackValue.text = progress.toString()
+                            setAttack(progress)
+                        }
+
+                        decaySeekbar -> {
+                            decayValue.text = progress.toString()
+                            setDecay(progress)
+                        }
+
+                        releaseSeekbar -> {
+                            releaseValue.text = progress.toString()
+                            setRelease(progress)
+                        }
+
+                        sustainSeekbar -> {
+                            val level = progress / 100.0
+                            sustainValue.text = level.toString()
+                            setSustain(level)
+                        }
+                    }
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    // no op
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    // no op
+                }
+
+            }
+
+            attackSeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
+            decaySeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
+            releaseSeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
+            sustainSeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
+
+            attackSeekbar.progress = 500
+            decaySeekbar.progress = 500
+            releaseSeekbar.progress = 500
+            sustainSeekbar.progress = 20
+
+            waveformSelector.setOnClickListener {
+                var ordinal = when (waveform) {
+                    Waveform.SINE -> 0
+                    else -> waveform.ordinal + 1
+                }
+
+                waveform = Waveform.values()[ordinal]
+
+                waveformSelector.drawable.level = ordinal
+
+                setWaveform(ordinal)
+            }
         }
+    }
+
+    private var waveform = Waveform.SAWTOOTH
+
+    enum class Waveform {
+        SAWTOOTH, PULSE, SINE
     }
 
     private companion object {
