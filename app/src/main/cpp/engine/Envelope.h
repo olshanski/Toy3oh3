@@ -9,6 +9,8 @@
 #include "atomic"
 #include "math.h"
 #include "android/log.h"
+#include <string>
+#include <string_view>
 
 //TODO: Cleanup
 
@@ -20,100 +22,36 @@ static constexpr int kDefaultAttackInFrames = 24000;
 static constexpr int kDefaultDecayInFrames = 24000;
 static constexpr float kDefaultSustain = 0.2;
 // 500ms
-static constexpr int kDefaultReleaseInFrames = 24000;
-
-static constexpr float kAmplitudeDeltaPerFrameAttack = (1.0) / (float) kDefaultAttackInFrames;
-static constexpr float kAmplitudeDeltaPerFrameDecay = (0.8) / (float ) kDefaultDecayInFrames;
-static constexpr float kAmplitudeDeltaPerFrameRelease = (1.0 + (kDefaultSustain - 1.0)) / (float ) kDefaultReleaseInFrames;
-
+static constexpr int kDefaultReleaseInFrames = 48000;
 
 enum Phase {
-    ATTACK, DECAY, SUSTAIN, RELEASE, IDLE
+    IDLE = 0,
+    ATTACK,
+    DECAY,
+    SUSTAIN,
+    RELEASE,
+    kNumEnvelopePhases
 };
 
 class Envelope {
 
 public:
 
-    float renderFrame() {
-        switch (mPhase) {
-            case ATTACK:
-                if (mCurrentFrame - mLastEventFrame >= kDefaultAttackInFrames) {
-                    mLastEventFrame.store(mCurrentFrame);
-                    if (1.0 == mSustainLevel) {
-                        mPhase = SUSTAIN;
-                    } else {
-                        float decayToGo = 1.0 - kDefaultSustain;
-                        mDecayDeltaPerFrame = decayToGo / kDefaultDecayInFrames;
-                        mPhase = DECAY;
-                    }
-                } else {
-                    mAmplitude.store(std::min(mAmplitude.load() + kAmplitudeDeltaPerFrameAttack,
-                                              (float) 1.0));
-                }
-                break;
-            case DECAY:
-                if (mCurrentFrame - mLastEventFrame >= mDecayInFrames) {
-                    mPhase = SUSTAIN;
-                } else {
-                    mAmplitude.store(
-                            std::max(mAmplitude.load() - mDecayDeltaPerFrame, mSustainLevel));
-                }
-                break;
-            case SUSTAIN:
-                break;
-            case RELEASE:
-                if (mCurrentFrame - mLastEventFrame >= mReleaseInFrames) {
-                    mAmplitude.store(0.0);
-                    mPhase = IDLE;
-                } else {
-                    mAmplitude.store(
-                            std::max((mAmplitude.load() - mReleaseDeltaPerFrame), (float) 0.0));
-                }
-                break;
-            case IDLE:
-                break;
-        }
+    float renderFrame();
+    void enterPhase(Phase phase);
 
-        mCurrentFrame++;
-        return mAmplitude.load();
-    }
-
-    bool isWaveOn() {
-        return mPhase.load() != IDLE;
-    }
-
-    void keyPressed() {
-        mPhase.store(ATTACK);
-        mCurrentFrame.store(0);
-        mLastEventFrame.store(0);
-    }
-
-    void keyReleased() {
-        // ugly
-        if (!isWaveOn()) {
-            return;
-        }
-
-        mReleaseDeltaPerFrame = mAmplitude / kDefaultReleaseInFrames;
-        mPhase.store(RELEASE);
-        mLastEventFrame.store(mCurrentFrame.load());
-    }
+    inline Phase getPhase() const { return mPhase; };
 
 private:
-    std::atomic<Phase> mPhase{IDLE};
+    Phase mPhase = IDLE;
+    int mCurrentSample = 0;
+    int mNextPhaseSample = kDefaultAttackInFrames;
+    int mLastEventSample = 0;
+    int sampleRate = 480000;
+    double mLevel = 0.0;
+    double multiplier;
 
-    std::atomic<int32_t> mCurrentFrame{0};
-    std::atomic<float> mAmplitude {0.0};
-    std::atomic<int> mLastEventFrame{ -1};
-
-    float mReleaseInFrames = kDefaultReleaseInFrames;
-    float mDecayInFrames = kDefaultDecayInFrames;
-
-    float mReleaseDeltaPerFrame = kAmplitudeDeltaPerFrameRelease;
-    float mDecayDeltaPerFrame = kAmplitudeDeltaPerFrameDecay;
-    float mSustainLevel = kDefaultSustain;
-
+    void calculateMultiplier(double startLevel, double endLevel, unsigned long long lengthInSamples);
 };
 
 #endif //TOY3OH3_ENVELOPE_H

@@ -15,8 +15,11 @@ constexpr double kDefaultFrequency = 440.0;
 static constexpr double kPi = M_PI;
 static constexpr double kTwoPi = kPi * 2;
 
+enum WaveForm {
+    SINE, SAWTOOTH, PULSE
+};
+
 class Oscillator {
-    //~Oscillator() = default;
 
 public:
 
@@ -24,26 +27,24 @@ public:
 
     void render(float *audioData, int32_t numFrames);
 
-    void setWaveOn(bool isWaveOn) {
-        if (isWaveOn) {
-            envelope->keyPressed();
-        } else {
-            envelope->keyReleased();
-        }
-    }
+    void setWaveOn(bool isWaveOn);
 
-    void setFrequency(double freq) {
-        mPhaseIncrement.store((kTwoPi * freq) / static_cast<double>(kDefaultSampleRate));
-    }
+    void setFrequency(double freq);
+
+    void setWaveForm(WaveForm newWaveForm);
+
+    WaveForm getWaveForm();
 
 private:
     float mPhase = 0.0;
+    WaveForm mWaveForm = SAWTOOTH;
 
-    std::atomic<float> mAmplitude{0.2};
     std::atomic<double> mPhaseIncrement{
             (kTwoPi * kDefaultFrequency) / static_cast<double>(kDefaultSampleRate)};
 
     std::unique_ptr<Envelope> envelope;
+
+    float nextSample(WaveForm waveForm);
 };
 
 

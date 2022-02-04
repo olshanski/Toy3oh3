@@ -52,11 +52,13 @@ class PadAdapter(private val listener: KeyListener) :
                 return@setOnTouchListener when (motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {
                         listener.onKeyPressed(pad.note, pad.octave)
+                        view.isPressed = true
                         true
                     }
 
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         listener.onKeyReleased(pad.note, pad.octave)
+                        view.isPressed = false
                         true
                     }
 

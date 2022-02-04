@@ -24,8 +24,8 @@ oboe::Result Toy303AudioEngine::startEngine() {
     if (result != oboe::Result::OK) {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "Error %s", oboe::convertToText(result));
     } else {
-        __android_log_print(ANDROID_LOG_DEBUG, TAG, "AudioStream format is %s",
-                            oboe::convertToText(format));
+        __android_log_print(ANDROID_LOG_DEBUG, TAG, "AudioStream format is %s, sample rate: %d",
+                            oboe::convertToText(format), mStream->getSampleRate());
     }
 
     mStream->requestStart();
@@ -38,15 +38,6 @@ oboe::Result Toy303AudioEngine::stopEngine() {
     oboe::Result result = mStream->close();
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Stopping audio engine");
     return result;
-}
-
-void Toy303AudioEngine::beep(bool isBeepOn) {
-    if (isBeepOn) {
-        mStream->requestStart();
-    } else {
-        mStream->requestStop();
-    }
-    __android_log_print(ANDROID_LOG_DEBUG, TAG, "Beeping %d", isBeepOn);
 }
 
 oboe::Result Toy303AudioEngine::openPlaybackStream() {

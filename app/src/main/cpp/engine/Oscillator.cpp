@@ -13,21 +13,60 @@ Oscillator::Oscillator() {
 
 void Oscillator::render(float *audioData, int32_t numFrames) {
 
-    if (!envelope->isWaveOn()) {
+    if (envelope->getPhase() == IDLE) {
         mPhase = 0.0;
+        for (int i = 0; i < numFrames; i++) {
+            audioData[i] = 0.0;
+        }
         return;
     }
 
     for (int i = 0; i < numFrames; ++i) {
-        if (!envelope->isWaveOn()) {
+        if (envelope->getPhase() == IDLE) {
+            envelope->renderFrame();
             audioData[i] = 0.0;
+            return;
         } else {
-            //audioData[i] = sinf(mPhase) * mAmplitude;
-            audioData[i] = (float) ((mPhase - kPi) / kPi) * mAmplitude;
+            audioData[i] = nextSample(mWaveForm);
             mPhase += mPhaseIncrement;
             if (mPhase > kTwoPi) mPhase -= kTwoPi;
         }
 
         audioData[i] *= envelope->renderFrame();
+    }
+}
+
+void Oscillator::setWaveOn(bool isWaveOn) {
+    if (isWaveOn) {
+        envelope->enterPhase(ATTACK);
+    } else {
+        envelope->enterPhase(RELEASE);
+    }
+}
+
+void Oscillator::setFrequency(double freq) {
+    mPhaseIncrement.store((kTwoPi * freq) / static_cast<double>(kDefaultSampleRate));
+}
+
+void Oscillator::setWaveForm(WaveForm newWaveForm) {
+    mWaveForm = newWaveForm;
+}
+
+WaveForm Oscillator::getWaveForm() {
+    return mWaveForm;
+}
+
+float Oscillator::nextSample(WaveForm waveForm) {
+    switch (waveForm) {
+        case SINE:
+            return sinf(mPhase);
+        case SAWTOOTH:
+            return (float) (1.0 - (2.0 * mPhase / (kPi * 2)));
+        case PULSE:
+            if (mPhase < kPi) {
+                return 1.0;
+            } else {
+                return -1.0;
+            }
     }
 }

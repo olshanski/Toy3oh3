@@ -15,7 +15,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textAppearance="?attr/textAppearanceHeadline4"
-        android:background="#aaaaaa"
+        android:background="#9999bb"
         tools:text="A"
         />
 </LinearLayout>

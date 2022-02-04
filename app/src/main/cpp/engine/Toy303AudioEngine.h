@@ -16,8 +16,6 @@ public:
 
     oboe::Result stopEngine();
 
-    void beep(bool isBeepOn);
-
     void playNote(int note, int octave);
 
     void releaseNote();
