@@ -28,6 +28,8 @@ public:
 
     void setWaveform(WaveForm waveForm);
 
+    void setCutoffFrequency(int frequencyHz);
+
 private:
 
     const char *TAG = "Toy303AudioEngine";

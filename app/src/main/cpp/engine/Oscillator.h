@@ -8,7 +8,6 @@
 #include <oboe/Oboe.h>
 #include <atomic>
 #include "android/log.h"
-#include "Envelope.h"
 
 constexpr double kDefaultFrequency = 440.0;
 
@@ -42,6 +41,8 @@ private:
     WaveForm mWaveForm = SAWTOOTH;
 
     bool isWaveOn = true;
+
+    static constexpr int kDefaultSampleRate = 48000;
 
     std::atomic<double> mPhaseIncrement{
             (kTwoPi * kDefaultFrequency) / static_cast<double>(kDefaultSampleRate)};

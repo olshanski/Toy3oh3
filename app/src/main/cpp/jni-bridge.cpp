@@ -69,3 +69,9 @@ Java_com_olshanski_toy3oh3_MainActivity_setWaveform(JNIEnv *env, jobject thiz, j
         audioEngine->setWaveform(SINE);
     }
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setCutoffFrequency(JNIEnv *env, jobject thiz,
+                                                           jint frequency_hz) {
+    audioEngine->setCutoffFrequency(frequency_hz);
+}

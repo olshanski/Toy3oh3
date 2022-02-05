@@ -156,6 +156,40 @@
         tools:text="0.3"
         />
 
+    <TextView
+        android:id="@+id/cutoff_label"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sustain_value"
+        android:layout_marginTop="8dp"
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        android:text="Cutoff"
+        />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/cutoff_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/cutoff_label"
+        app:layout_constraintTop_toTopOf="@id/cutoff_label"
+        app:layout_constraintEnd_toStartOf="@id/cutoff_value"
+        android:min="1"
+        android:max="22000"
+        android:tooltipText="Attack"
+        />
+
+    <TextView
+        android:id="@+id/cutoff_value"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/cutoff_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        tools:text="22000"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pads"
         android:layout_width="0dp"

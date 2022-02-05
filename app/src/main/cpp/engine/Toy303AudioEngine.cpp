@@ -80,3 +80,7 @@ void Toy303AudioEngine::setSustainLevel(double sustain) {
 void Toy303AudioEngine::setWaveform(WaveForm waveForm) {
     toy303Callback->setWaveform(waveForm);
 }
+
+void Toy303AudioEngine::setCutoffFrequency(int frequencyHz) {
+    toy303Callback->setCutoffFrequency(frequencyHz);
+}

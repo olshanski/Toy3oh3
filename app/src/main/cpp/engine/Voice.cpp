@@ -9,6 +9,7 @@ Voice::Voice() {
     mOscillator = std::make_unique<Oscillator>();
     mEnvelope = std::make_unique<Envelope>();
     mEnvelope->setListener(this);
+    mFilter = std::make_unique<Filter>();
     __android_log_print(ANDROID_LOG_DEBUG, "Callback", "Initialized callback");
 }
 
@@ -24,7 +25,7 @@ oboe::DataCallbackResult Voice::onAudioReady(oboe::AudioStream *audioStream, voi
     }
 
     for (int i = 0; i < numFrames; i++) {
-        output_data[i] = mOscillator->nexSample() * mEnvelope->nextSample();
+        output_data[i] = mFilter->processSample(mOscillator->nexSample() * mEnvelope->nextSample());
     }
 
     return oboe::DataCallbackResult::Continue;
@@ -72,6 +73,10 @@ void Voice::setSustainLevel(double sustain) {
 
 void Voice::setWaveform(WaveForm waveForm) {
     mOscillator->setWaveForm(waveForm);
+}
+
+void Voice::setCutoffFrequency(int frequencyHz) {
+    mFilter->setCutoffFrequency(frequencyHz);
 }
 
 void Voice::onEnvelopeStarted() {

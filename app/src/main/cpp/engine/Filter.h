@@ -1,9 +1,12 @@
+//
+// Created by Mikhail Olshanskii on 05.10.2021.
+//
 
 #ifndef TOY3OH3_FILTER_H
 #define TOY3OH3_FILTER_H
 
 enum FilterType {
-    // TODO: add hipass, bandpass and notch filter types
+    // TODO: add hipass, bandpass and notch processSample types
     LOW_PASS
 };
 
@@ -14,22 +17,24 @@ public:
     Filter();
 
     inline void setCutoffFrequency(int cutoffFrequencyHz) {
-        mCutoffFrequency = cutoffFrequencyHz;
+        mCutoffFrequency = cutoffFrequencyHz / kDefaultCutoffFrequencyHz;
     };
 
-    int getCutoff() {
-        return  mCutoffFrequency;
+    int getCutoffFrequency() {
+        return  mCutoffFrequency * kDefaultCutoffFrequencyHz;
     };
 
     void setFilterType(FilterType filterType);
 
-    double filter(double sample);
+    double processSample(double sample);
 
 private:
-    static constexpr int kDefaultCutoffFrequencyHz = 22000;
+    static constexpr double kDefaultCutoffFrequencyHz = 22000.0;
 
-    int mCutoffFrequency = kDefaultCutoffFrequencyHz;
+    double mCutoffFrequency = kDefaultCutoffFrequencyHz / kDefaultCutoffFrequencyHz;
     FilterType mFilterType = LOW_PASS;
+
+    double out = 0.0;
 };
 
 #endif

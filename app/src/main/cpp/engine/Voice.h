@@ -7,7 +7,9 @@
 
 #include <oboe/Oboe.h>
 #include "Oscillator.h"
+#include "Envelope.h"
 #include "EnvelopeListener.h"
+#include "Filter.h"
 
 class Voice : public oboe::AudioStreamDataCallback, EnvelopeListener {
 public:
@@ -33,6 +35,8 @@ public:
 
     void onEnvelopeStopped();
 
+    void setCutoffFrequency(int frequencyHz);
+
 private:
     static constexpr int kNoteA4Index = 49;
     static constexpr int kSemitonesPerOctave = 12;
@@ -45,6 +49,7 @@ private:
 
     std::unique_ptr<Envelope> mEnvelope;
 
+    std::unique_ptr<Filter> mFilter;
     /**
      *
      * @param semitoneOffset note's offset in semitones from start of a piano keyboard.
