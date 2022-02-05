@@ -30,6 +30,8 @@ public:
 
 private:
 
+    const char *TAG = "Toy303AudioEngine";
+
     oboe::Result openPlaybackStream();
 
     std::shared_ptr<oboe::AudioStream> mStream;

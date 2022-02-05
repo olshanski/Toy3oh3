@@ -6,8 +6,6 @@
 #include <android/log.h>
 #include <oboe/Oboe.h>
 
-const char *TAG = "Toy303AudioEngine";
-
 Toy303AudioEngine::Toy303AudioEngine() {
     toy303Callback = std::make_unique<Voice>();
 
