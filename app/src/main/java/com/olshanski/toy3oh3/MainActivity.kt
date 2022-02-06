@@ -7,12 +7,13 @@ import android.widget.SeekBar
 import androidx.recyclerview.widget.GridLayoutManager
 import com.olshanski.toy3oh3.adapter.PadAdapter
 import com.olshanski.toy3oh3.databinding.ActivityMainBinding
+import com.olshanski.toy3oh3.synthesis.Synthesis
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val synthesis: Synthesis = Synthesis()
 
-    // TODO: Handle accessibility
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,44 +25,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        startAudioEngine()
+        synthesis.startAudioEngine()
         super.onResume()
     }
 
     override fun onPause() {
-        stopAudioEngine()
+        synthesis.stopAudioEngine()
         super.onPause()
     }
-
-    /**
-     * A native method that is implemented by the 'toy3oh3' native library,
-     * which is packaged with this application.
-     */
-    external fun stringFromJNI(): String
-
-    external fun startAudioEngine()
-
-    external fun stopAudioEngine()
-
-    external fun playNote(note: Int, octave: Int)
-
-    external fun releaseNote()
-
-    external fun setVolume(volume: Double)
-
-    external fun setAttack(attackMillis: Int)
-
-    external fun setDecay(decayMillis: Int)
-
-    external fun setRelease(releaseMillis: Int)
-
-    external fun setSustain(sustain: Double)
-
-    external fun setWaveform(waveform: Int)
-
-    external fun setCutoffFrequency(frequencyHz: Int)
-
-    external fun setQ(q: Double)
 
     private fun setupUi() {
         with(binding) {
@@ -74,13 +45,13 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onKeyPressed(note: Int, octave: Int) {
                     currentPad = note to octave
-                    playNote(note, octave)
+                    synthesis.playNote(note, octave)
 
                 }
 
                 override fun onKeyReleased(note: Int, octave: Int) {
                     if (note == currentPad?.first && octave == currentPad?.second) {
-                        releaseNote()
+                        synthesis.releaseNote()
                     }
                 }
             })
@@ -101,34 +72,34 @@ class MainActivity : AppCompatActivity() {
                     when (seekBar) {
                         attackSeekbar -> {
                             attackValue.text = progress.toString()
-                            setAttack(progress)
+                            synthesis.setAttack(progress)
                         }
 
                         decaySeekbar -> {
                             decayValue.text = progress.toString()
-                            setDecay(progress)
+                            synthesis.setDecay(progress)
                         }
 
                         releaseSeekbar -> {
                             releaseValue.text = progress.toString()
-                            setRelease(progress)
+                            synthesis.setRelease(progress)
                         }
 
                         sustainSeekbar -> {
                             val level = progress / 100.0
                             sustainValue.text = level.toString()
-                            setSustain(level)
+                            synthesis.setSustain(level)
                         }
 
                         cutoffSeekbar -> {
                             cutoffValue.text = progress.toString()
-                            setCutoffFrequency(progress)
+                            synthesis.setCutoffFrequency(progress)
                         }
 
                         qSeekbar -> {
                             val q: Double = if (progress < 1) 0.01 else (progress / 10.0)
                             qValue.text = q.toString()
-                            setQ(q)
+                            synthesis.setQ(q)
                         }
                     }
                 }
@@ -158,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             qSeekbar.progress = 19
 
             waveformSelector.setOnClickListener {
-                var ordinal = when (waveform) {
+                val ordinal = when (waveform) {
                     Waveform.SINE -> 0
                     else -> waveform.ordinal + 1
                 }
@@ -167,7 +138,7 @@ class MainActivity : AppCompatActivity() {
 
                 waveformSelector.drawable.level = ordinal
 
-                setWaveform(ordinal)
+                synthesis.setWaveform(ordinal)
             }
         }
     }
@@ -179,10 +150,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private companion object {
-        // Used to load the 'toy3oh3' library on application startup.
-        init {
-            System.loadLibrary("toy3oh3")
-        }
 
         private val NOTES = listOf(
             Pad(4, 1, "C"),
