@@ -13,8 +13,6 @@
 #include <string_view>
 #include "EnvelopeListener.h"
 
-//TODO: Cleanup
-
 static constexpr int kDefaultSampleRate = 48000;
 
 static constexpr int kDefaultAttackMillis = 500;

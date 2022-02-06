@@ -3,11 +3,11 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.18.1)
 
 # Declares and names the project.
 
-project("toy3oh3")
+project("synthesis")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -15,19 +15,18 @@ project("toy3oh3")
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-        toy3oh3
+        synthesis
 
         # Sets the library as a shared library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        jni-bridge.cpp
+        synthesis.cpp
 
         engine/Toy303AudioEngine.cpp
         engine/Voice.cpp
         engine/Oscillator.cpp
         engine/Envelope.cpp
-        engine/CircularBuffer.cpp
         engine/EnvelopeListener.cpp
         engine/Filter.cpp
         )
@@ -52,7 +51,7 @@ find_package (oboe REQUIRED CONFIG)
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        toy3oh3
+        synthesis
 
         oboe::oboe
 

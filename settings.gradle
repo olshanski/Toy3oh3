@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Toy3oh3"
 include ':app'
+include ':synthesis'
