@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
 
     external fun setWaveform(waveform: Int)
 
+    external fun setCutoffFrequency(frequencyHz: Int)
+
+    external fun setQ(q: Double)
+
     private fun setupUi() {
         with(binding) {
 
@@ -115,6 +119,17 @@ class MainActivity : AppCompatActivity() {
                             sustainValue.text = level.toString()
                             setSustain(level)
                         }
+
+                        cutoffSeekbar -> {
+                            cutoffValue.text = progress.toString()
+                            setCutoffFrequency(progress)
+                        }
+
+                        qSeekbar -> {
+                            val q: Double = if (progress < 1) 0.01 else (progress / 10.0)
+                            qValue.text = q.toString()
+                            setQ(q)
+                        }
                     }
                 }
 
@@ -132,11 +147,15 @@ class MainActivity : AppCompatActivity() {
             decaySeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
             releaseSeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
             sustainSeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
+            cutoffSeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
+            qSeekbar.setOnSeekBarChangeListener(seekBarChangeListener)
 
             attackSeekbar.progress = 500
             decaySeekbar.progress = 500
             releaseSeekbar.progress = 500
             sustainSeekbar.progress = 20
+            cutoffSeekbar.progress = 440
+            qSeekbar.progress = 19
 
             waveformSelector.setOnClickListener {
                 var ordinal = when (waveform) {

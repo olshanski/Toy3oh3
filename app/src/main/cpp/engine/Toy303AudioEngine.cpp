@@ -6,8 +6,6 @@
 #include <android/log.h>
 #include <oboe/Oboe.h>
 
-const char *TAG = "Toy303AudioEngine";
-
 Toy303AudioEngine::Toy303AudioEngine() {
     toy303Callback = std::make_unique<Voice>();
 
@@ -81,4 +79,12 @@ void Toy303AudioEngine::setSustainLevel(double sustain) {
 
 void Toy303AudioEngine::setWaveform(WaveForm waveForm) {
     toy303Callback->setWaveform(waveForm);
+}
+
+void Toy303AudioEngine::setCutoffFrequency(int frequencyHz) {
+    toy303Callback->setCutoffFrequency(frequencyHz);
+}
+
+void Toy303AudioEngine::setFilterQ(double q) {
+    toy303Callback->setFilterQ(q);
 }

@@ -28,7 +28,13 @@ public:
 
     void setWaveform(WaveForm waveForm);
 
+    void setCutoffFrequency(int frequencyHz);
+
+    void setFilterQ(double q);
+
 private:
+
+    const char *TAG = "Toy303AudioEngine";
 
     oboe::Result openPlaybackStream();
 
