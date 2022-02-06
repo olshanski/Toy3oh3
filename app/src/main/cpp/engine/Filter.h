@@ -6,8 +6,10 @@
 #define TOY3OH3_FILTER_H
 
 enum FilterType {
-    // TODO: add hipass, bandpass and notch processSample types
-    LOW_PASS
+    LOW_PASS = 0,
+    HIGH_PASS,
+    BAND_PASS,
+    kNumFilterTypes
 };
 
 class Filter {
@@ -16,25 +18,36 @@ public:
 
     Filter();
 
-    inline void setCutoffFrequency(int cutoffFrequencyHz) {
-        mCutoffFrequency = cutoffFrequencyHz / kDefaultCutoffFrequencyHz;
-    };
+    void setCutoffFrequency(int frequencyCutoff);
 
     int getCutoffFrequency() {
-        return  mCutoffFrequency * kDefaultCutoffFrequencyHz;
+        return  mCutoffFrequency * kDefaultSampleRate;
     };
 
     void setFilterType(FilterType filterType);
 
-    double processSample(double sample);
+    FilterType getFilterType() {
+        return mFilterType;
+    }
+
+    void setQ(double q);
+
+    double nextSample(double sample);
 
 private:
-    static constexpr double kDefaultCutoffFrequencyHz = 22000.0;
+    static constexpr double kDefaultSampleRate = 48000.0;
+    static constexpr int kDefaultFrequencyCutoffHz = 440;
 
-    double mCutoffFrequency = kDefaultCutoffFrequencyHz / kDefaultCutoffFrequencyHz;
+    double mCutoffFrequency = kDefaultFrequencyCutoffHz / kDefaultSampleRate;
     FilterType mFilterType = LOW_PASS;
-
     double out = 0.0;
+    double mFrequencyCutoff, mQ;
+    double mSampleRate = kDefaultSampleRate;
+
+    double a0, a1, a2, b1, b2;
+    double z1, z2;
+
+    void calcBiQuad();
 };
 
 #endif

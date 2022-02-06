@@ -25,7 +25,7 @@ oboe::DataCallbackResult Voice::onAudioReady(oboe::AudioStream *audioStream, voi
     }
 
     for (int i = 0; i < numFrames; i++) {
-        output_data[i] = mFilter->processSample(mOscillator->nexSample() * mEnvelope->nextSample());
+        output_data[i] = mFilter->nextSample(mOscillator->nexSample() * mEnvelope->nextSample());
     }
 
     return oboe::DataCallbackResult::Continue;
@@ -77,6 +77,10 @@ void Voice::setWaveform(WaveForm waveForm) {
 
 void Voice::setCutoffFrequency(int frequencyHz) {
     mFilter->setCutoffFrequency(frequencyHz);
+}
+
+void Voice::setFilterQ(double q) {
+    mFilter->setQ(q);
 }
 
 void Voice::onEnvelopeStarted() {

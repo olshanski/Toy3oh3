@@ -30,6 +30,8 @@ public:
 
     void setCutoffFrequency(int frequencyHz);
 
+    void setFilterQ(double q);
+
 private:
 
     const char *TAG = "Toy303AudioEngine";

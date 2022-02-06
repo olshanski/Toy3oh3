@@ -84,3 +84,7 @@ void Toy303AudioEngine::setWaveform(WaveForm waveForm) {
 void Toy303AudioEngine::setCutoffFrequency(int frequencyHz) {
     toy303Callback->setCutoffFrequency(frequencyHz);
 }
+
+void Toy303AudioEngine::setFilterQ(double q) {
+    toy303Callback->setFilterQ(q);
+}

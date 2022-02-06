@@ -75,3 +75,8 @@ Java_com_olshanski_toy3oh3_MainActivity_setCutoffFrequency(JNIEnv *env, jobject 
                                                            jint frequency_hz) {
     audioEngine->setCutoffFrequency(frequency_hz);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_olshanski_toy3oh3_MainActivity_setQ(JNIEnv *env, jobject thiz, jdouble q) {
+    audioEngine->setFilterQ(q);
+}

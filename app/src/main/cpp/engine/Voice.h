@@ -37,6 +37,8 @@ public:
 
     void setCutoffFrequency(int frequencyHz);
 
+    void setFilterQ(double q);
+
 private:
     static constexpr int kNoteA4Index = 49;
     static constexpr int kSemitonesPerOctave = 12;
